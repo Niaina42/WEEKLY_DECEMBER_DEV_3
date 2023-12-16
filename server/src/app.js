@@ -41,7 +41,7 @@ const server = http.createServer((req, res) => {
                 const ext = path.extname(filePath);
                 const contentType = getContentType(ext);
                 console.log(ext)
-                // res.writeHead(200, { 'Content-Type': contentType });
+                res.writeHead(200, { 'Content-Type': contentType });
                 res.end(data);
             }
         });

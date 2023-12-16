@@ -1,27 +1,32 @@
 const bcrypt = require("bcrypt");
 const model = require("../models/users");
-const { generateToken } = require('../service/service')
+const { generateToken, sendRes } = require('../service/service')
 const saltRounds = 10;
  
 module.exports = {
     getAll: async (req, res) => {
         try {
             let data = await model.getAll()
-            if(data)
-                res.status(200).send(data)
-            else
-                res.status(200).send([])
+            if(data) {
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify(data));
+            }
+            else {
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end([])
+            }
         }
         catch (error) {
             console.log(error)
-            res.status(500).send(error.message)
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({message: "Error"}))
         }
     },
     getOne: async (req, res) => {
-        let u_id = parseInt(req.params.u_id)
+        let id = parseInt(req.params.id)
 
         try { 
-            let data = await model.getOne(u_id)
+            let data = await model.getOne(id)
             if(data)
                 res.status(200).send(data)
             else
@@ -33,10 +38,10 @@ module.exports = {
         }
     },
     getByEmail:  async (req, res) => {
-        let { u_email } = req.params
+        let { email } = req.params
 
         try { 
-            let data = await model.getByEmail(u_email)
+            let data = await model.getByEmail(email)
             if(data)
                 res.status(200).send(data)
             else
@@ -48,10 +53,10 @@ module.exports = {
         }
     },
     search:  async (req, res) => {
-        let { query, u_id } = req.body
+        let { query, id } = req.body
 
         try { 
-            let data = await model.search(String(query), parseInt(u_id))
+            let data = await model.search(String(query), parseInt(id))
             if(data)
                 res.status(200).send(data)
             else
@@ -62,75 +67,74 @@ module.exports = {
             res.status(500).send(error.message)
         }
     },
-    getLogin: async (req, res) => {
-        let { u_email, u_password } = req.body
+    getLogin: async (body, res) => {
+        let { email, password } = body.fields
 
         try {
-            let user = await model.getByEmail(u_email)
+            let user = await model.getByEmail(email)
             if(!user) {
-                res.status(500).send("This user doesn't exist")
+                sendRes(res, 500, { message: "This user doesn't exist" })
             }
             else {
-                bcrypt.compare(u_password, user.u_password, function(err, verified){
-                    if (err) return res.status(403).send("Incorrect Password");
+                bcrypt.compare(password, user.password, function(err, verified){
+                    if (err) return sendRes(res, 403, { message: "Incorrect Password" });
                     if (verified) {
-                        const token = generateToken(user.u_id , user.u_email);
-                        res.send({
+                        const token = generateToken(user.id , user.email);
+                        sendRes(res, 200, {
                             user,
                             token
                         });
                     }
                     else {
-                        res.status(403).send("Incorrect Password")
+                        sendRes(res, 403, { message:  "Incorrect Password"})
                     }
                 })
             }
         }
         catch (error) {
             console.log(error)
-            res.status(500).send(error)
+            sendRes(res, 500, error)
         }
     },
-    register: async (req, res) => {
-        let { u_name, u_last_name, u_email, u_password } = req.body
-
+    register: async (body, res) => {
+        let { name, last_name, email, password } = body.fields
         try {
-            let find = await model.getByEmail(u_email)
+            let find = await model.getByEmail(email)
             if(find) {
-                res.status(500).send("This email is already in use")
+                sendRes(res, 500, { message: "This email is already in use" })
             }
             else {
                 let saltRounds = 10
-                bcrypt.hash(u_password, saltRounds, async (err ,hash) => {
+                bcrypt.hash(password, saltRounds, async (err ,hash) => {
                     if(err){
-                        res.status(403).send("Registration failed")
+                        sendRes(res, 403, { message: "Registration failed" })
                     }
                     else {
-                        let user = await model.create(u_name, u_last_name, u_email, hash)
+                        let user = await model.create(name, last_name, email, hash)
                         if(user) {
-                            let token = generateToken(user.u_id, user.u_email)
+                            let token = generateToken(user.id, user.email)
                             let response  = {
                                 user,
                                 token
                             }
-                            res.status(200).send(response)
+                            sendRes(res, 200, response)
                         }
-                        else res.status(500).send("Registration failed")
+                        else sendRes(res, 500, { message: "Registration failed" })
                     }
                 })
             }
         }
         catch (error) {
             console.log(error)
-            res.status(500).send(error)
+            sendRes(res, 500, error)
         }
     },
     update: async (req, res) => {
-        let { u_name, u_last_name, u_email } = req.body
-        let u_id = parseInt(req.body.u_id)
+        let { name, last_name, email } = req.body
+        let id = parseInt(req.body.id)
         try { 
 
-            let data = await model.update(u_name, u_last_name, u_email, u_id)
+            let data = await model.update(name, last_name, email, id)
             res.status(200).send(data)
         }
         catch (error) {
@@ -139,10 +143,10 @@ module.exports = {
         }
     },
     delete: async (req, res) => {
-        let u_id = parseInt(req.params.u_id)
+        let id = parseInt(req.params.id)
 
         try { 
-            let data = await model.delete(u_id)
+            let data = await model.delete(id)
             res.status(200).send(data)
         }
         catch (error) {

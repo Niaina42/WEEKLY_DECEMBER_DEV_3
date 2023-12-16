@@ -3,16 +3,16 @@ services:
   postgres:
     image: postgres:14.1
     environment:
-      POSTGRES_USER: myproject
-      POSTGRES_PASSWORD: myproject42
-      POSTGRES_DB: myproject-db
+      POSTGRES_USER: mystorage
+      POSTGRES_PASSWORD: mystorage42
+      POSTGRES_DB: mystorage-db
     ports:
       - "5432:5432"
 
   pgadmin:
     image: dpage/pgadmin4:6
     environment:
-      PGADMIN_DEFAULT_EMAIL: myproject@gmail.com
+      PGADMIN_DEFAULT_EMAIL: mystorage@gmail.com
       PGADMIN_DEFAULT_PASSWORD: 2k23_admin
     ports:
       - "98:80"

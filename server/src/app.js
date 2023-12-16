@@ -3,6 +3,7 @@ const { uploadFile } = require('./service/service');
 const formidable = require('formidable');
 const path = require('path');
 const fs = require('fs');
+const routes = require('./routes/routes');
 
 function getContentType(ext) {
     switch (ext) {
@@ -24,7 +25,7 @@ function getContentType(ext) {
     }
 }
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
     if (req.method.toLowerCase() === 'get' && req.url.split("/").includes("public")) {
         // Get the static file
         let fileName = req.url.replace("/public/","")
@@ -46,32 +47,11 @@ const server = http.createServer((req, res) => {
             }
         });
 
-    } else if (req.method.toLowerCase() === 'post' && req.url === '/api/upload') {
-        const form = new formidable.IncomingForm();
-
-        form.parse(req, async (err, fields, files) => {
-            if (err) {
-                res.writeHead(500, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ message: 'Error parsing form data' }));
-                return;
-            }
-            let file = null, response
-            if (files.file) {
-                try {
-                    file = await uploadFile(files.file[0])
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-            if(file) 
-                response = { name: fields.lastname, filePath: file }
-            else
-                response = { name: fields.lastname }
-
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(response));
-        });
-    } else {
+    } 
+    else if(req.url in routes) {
+        return routes[req.url](req, res)
+    }
+    else {
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ message: 'Resource not found' }));
     }

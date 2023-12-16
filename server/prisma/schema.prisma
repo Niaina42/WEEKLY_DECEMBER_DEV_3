@@ -7,11 +7,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
-  u_id      Int      @id @default(autoincrement())
-  u_createdAt DateTime @default(now())
-  u_name     String   @db.VarChar(255)
-  u_last_name  String?   @db.VarChar(255)
-  u_email String @unique
-  u_password String? 
+model Users {
+  id          Int         @id @default(autoincrement())
+  createdAt   DateTime    @default(now())
+  name        String      @db.VarChar(255)
+  last_name   String?     @db.VarChar(255)
+  email       String      @unique
+  password    String? 
+  folders     Folders[]
+}
+
+model Folders {
+  id          Int           @id @default(autoincrement())
+  createdAt   DateTime      @default(now())
+  name        String        @db.VarChar(255)
+  icon        String        @db.VarChar(255)
+  user        Users         @relation(fields: [userId], references: [id])
+  userId      Int
+  files       Files[]
+}
+
+model Files {
+  id          Int           @id @default(autoincrement())
+  createdAt   DateTime      @default(now())
+  path        String        @db.VarChar(255)
+  folder      Folders       @relation(fields: [folderId], references: [id])
+  folderId    Int
 }

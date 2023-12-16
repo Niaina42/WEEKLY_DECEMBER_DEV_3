@@ -1,8 +1,12 @@
 
 const userRouter = require('./users');
+const folderRouter = require('./folders');
+const fileRoute = require('./files');
 
 const routes = {
-    ...userRouter
+    ...userRouter,
+    ...folderRouter,
+    ...fileRoute
 }
 
 module.exports = routes

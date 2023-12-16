@@ -8,18 +8,15 @@ module.exports = {
         try {
             let data = await model.getAll()
             if(data) {
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify(data));
+                sendRes(res, 200, data);
             }
             else {
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end([])
+                sendRes(res, 200, []);
             }
         }
         catch (error) {
             console.log(error)
-            res.writeHead(500, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({message: "Error"}))
+            sendRes(res, 500, {message: "Error"});
         }
     },
     getOne: async (req, res) => {

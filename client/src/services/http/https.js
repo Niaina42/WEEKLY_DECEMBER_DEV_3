@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BaseUrl = 'http://localhost:9090'
+const BaseUrl = 'http://173.249.22.169:9090'
 const https = axios.create({
     baseURL: BaseUrl,
 });

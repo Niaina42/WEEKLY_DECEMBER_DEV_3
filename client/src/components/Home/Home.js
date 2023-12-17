@@ -103,9 +103,4 @@ const Home = () => {
   );
 };
 
-// ) : (
-//   <main className="mt-5">
-//     <div className="svg36 loader-animate3 horizontal-margin-auto mt-5"></div>
-//   </main>
-// );
 export default Home;

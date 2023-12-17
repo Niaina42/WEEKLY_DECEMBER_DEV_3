@@ -30,6 +30,7 @@
     npm run generate
 ```
 - Go inside src folder then run in pm2 ``` pm2 start app.js ```
+- Go to the client dierctories and run ``` pm2 start app.config.json ```
 
 ## More functionalities added
 - Ajout de dossier pour facilité le rangement du stockage des utilisateurs

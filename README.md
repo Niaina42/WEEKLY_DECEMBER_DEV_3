@@ -1,6 +1,6 @@
 # My Storage
 
-### Prod link: http://173.249.22.169:3005
+### Prod link: http://173.249.22.169:3030
 
 ## Installation
 
@@ -11,6 +11,10 @@
 
 ### Run local
 - run ``` docker-compose up -d ``` for starting database
+- Go to /client/src/services/http/https.js and change the BaseUrl as 
+``` 
+    const BaseUrl = 'http://localhost:9090' 
+```
 - Go to the server directories and run 
 ``` 
     npm install 

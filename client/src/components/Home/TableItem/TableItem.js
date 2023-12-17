@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { generateDate } from "../../../services/date/date";
 import useDownloader from "react-use-downloader";
 import { toFormData } from "axios";
-import https from "../../../services/http/https";
+import https, { BaseUrl } from "../../../services/http/https";
 
 const TableItem = ({ file, deleteCallback }) => {
   const { size, elapsed, percentage, download, cancel, error, isInProgress } =
     useDownloader();
   const [loading, setLoading] = useState(false);
-  const fileUrl = "http://localhost:9090" + file.path;
+  const fileUrl = BaseUrl + file.path;
   const name = file.path.replace("/public/", "");
 
   const deleteFile = async () => {

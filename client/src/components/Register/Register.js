@@ -1,7 +1,38 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import https from "../../services/http/https";
+import { setAuthToken } from "../../services/token/token";
+import { useAuth } from "../../services/context/auth-context";
 
 const Register = () => {
+  let initial = {
+    name: "",
+    last_name: "",
+    email:"",
+    password: "",
+  }
+  const [data, setData] = useState(initial)
+  const { signup } = useAuth()
+  const navigation = useNavigate()
+ 
+  const handleChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value
+    })
+  }
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try { 
+      let response = await signup(data)
+      if(response) {
+        navigation("/home")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <div class="container-scroller">
       <div class="container-fluid page-body-wrapper full-page-wrapper">
@@ -16,13 +47,27 @@ const Register = () => {
                 <h6 class="font-weight-light">
                     L'inscription est simple. Cela ne prend que quelques seconde
                 </h6>
-                <form class="pt-3">
+                <form class="pt-3" onSubmit={handleSubmit}>
                   <div class="form-group">
                     <input
                       type="text"
                       class="form-control form-control-lg"
                       id="exampleInputUsername1"
-                      placeholder="Username"
+                      name="name"
+                      onChange={handleChange}
+                      placeholder="Nom"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <input
+                      type="text"
+                      class="form-control form-control-lg"
+                      id="exampleInputUsername1"
+                      name="last_name"
+                      onChange={handleChange}
+                      placeholder="Prenom"
+                      required
                     />
                   </div>
                   <div class="form-group">
@@ -30,15 +75,21 @@ const Register = () => {
                       type="email"
                       class="form-control form-control-lg"
                       id="exampleInputEmail1"
+                      name="email"
+                      onChange={handleChange}
                       placeholder="Email"
+                      required
                     />
                   </div>
                   <div class="form-group">
                     <input
                       type="password"
                       class="form-control form-control-lg"
+                      name="password"
+                      onChange={handleChange}
                       id="exampleInputPassword1"
-                      placeholder="Password"
+                      placeholder="Mot de passe"
+                      required
                     />
                   </div>
                   <div class="mb-4">
@@ -50,12 +101,12 @@ const Register = () => {
                     </div>
                   </div>
                   <div class="mt-3">
-                    <a
+                    <button
                       class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn"
-                      href="../../index.html"
+                      type="submit"
                     >
                       S'INSCRIRE
-                    </a>
+                    </button>
                   </div>
                   <div class="text-center mt-4 font-weight-light">
                     {" "}

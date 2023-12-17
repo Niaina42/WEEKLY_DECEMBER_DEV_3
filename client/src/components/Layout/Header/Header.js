@@ -1,6 +1,16 @@
 import React from "react";
+import { useAuth } from "../../../services/context/auth-context";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const { user, logout } = useAuth()
+  const navigation = useNavigate()
+  
+  const handleLogout = () => {
+    navigation("/")
+    logout()
+  }
+
   return (
     <nav className="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
@@ -44,20 +54,21 @@ const Header = () => {
                 <span className="availability-status online"></span>
               </div>
               <div className="nav-profile-text">
-                <p className="mb-1 text-black">David Greymaax</p>
+                <p className="mb-1 text-black">{user.user.name+" "+user.user.last_name}</p>
               </div>
             </a>
             <div
               className="dropdown-menu navbar-dropdown"
               aria-labelledby="profileDropdown"
             >
-              <a className="dropdown-item" href="#">
-                <i className="mdi mdi-cached me-2 text-success"></i> Activity Log{" "}
-              </a>
+              <div className="p-2">
+                <p>{user.user.name+" "+user.user.last_name}</p>
+                <p>{user.user.email}</p>
+              </div>
               <div className="dropdown-divider"></div>
-              <a className="dropdown-item" href="#">
-                <i className="mdi mdi-logout me-2 text-primary"></i> Signout{" "}
-              </a>
+              <button className="dropdown-item"onClick={handleLogout}>
+                <i className="mdi mdi-logout me-2 text-primary"></i> Se déconnecter{" "}
+              </button>
             </div>
           </li>
         </ul>

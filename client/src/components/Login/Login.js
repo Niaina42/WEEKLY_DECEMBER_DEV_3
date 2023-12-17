@@ -1,7 +1,37 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import https from "../../services/http/https";
+import { setAuthToken } from "../../services/token/token";
+import { useAuth } from "../../services/context/auth-context";
 
 const Login = () => {
+  let initial = {
+    email:"",
+    password: "",
+  }
+  const [data, setData] = useState(initial)
+  const [error, setError] = useState(null)
+  const navigation = useNavigate()
+  const { login } = useAuth()
+  const handleChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value
+    })
+  }
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try { 
+      let response = await login(data)
+      if(response) {
+        navigation("/home")
+      }
+    } catch (error) {
+      console.log(error)
+      setError(error.response.data.message)
+    }
+  }
   return (
     <div className="container-scroller">
       <div className="container-fluid page-body-wrapper full-page-wrapper">
@@ -14,31 +44,41 @@ const Login = () => {
                 </div>
                 <h4>Bonjour, Commençons l'aventure</h4>
                 <h6 className="font-weight-light">Connectez-vous pour continuer.</h6>
-                <form className="pt-3">
+                <form className="pt-3" onSubmit={handleSubmit}>
                   <div className="form-group">
                     <input
                       type="email"
+                      name="email"
+                      onChange={handleChange}
                       className="form-control form-control-lg"
                       id="exampleInputEmail1"
-                      placeholder="Username"
+                      placeholder="Email"
                     />
                   </div>
                   <div className="form-group">
                     <input
                       type="password"
+                      name="password"
+                      onChange={handleChange}
                       className="form-control form-control-lg"
                       id="exampleInputPassword1"
                       placeholder="Password"
                     />
                   </div>
                   <div className="mt-3">
-                    <a
+                    <button
                       className="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn"
-                      href="../../index.html"
                     >
                       CONNEXION
-                    </a>
+                    </button>
                   </div>
+                  {
+                    error && (
+                      <div className="alert alert-danger mt-2" role="alert">
+                      {error}
+                  </div>
+                    )
+                  }
                   <div className="my-2 d-flex justify-content-between align-items-center">
                     <div className="form-check">
                       <label className="form-check-label text-muted">

@@ -26,12 +26,16 @@ function getContentType(ext) {
 }
 
 const server = http.createServer(async (req, res) => {
-    //d'accéder à notre API depuis n'importe quelle origine ( '*' ) ;
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    //d'ajouter les headers mentionnés aux requêtes envoyées vers notre API (Origin , X-Requested-With , etc.) ;
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-    //d'envoyer des requêtes avec les méthodes mentionnées ( GET ,POST , etc.).
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+
+    res.setHeader('Access-Control-Allow-Origin', '*'); 
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); 
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    
+    if (req.method === 'OPTIONS') {
+      res.writeHead(204);
+      res.end();
+      return;
+    }
 
     if (req.method.toLowerCase() === 'get' && req.url.split("/").includes("public")) {
         // Get the static file

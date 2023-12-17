@@ -33,29 +33,6 @@ const userRouter = {
             sendRes(res, 400, {error: "Method not allowed"})
         }
     },
-    // '/file/add': (req, res) => {
-    //     // controller.register(req, res)
-    //     const form = new formidable.IncomingForm();
-    //     form.parse(req, async (err, fields, files) => {
-    //         if (err) {
-    //             reject(new Error("Error parsing form data"))
-    //         }
-    //         let file = null, response
-    //         if (files.file) {
-    //             try {
-    //                 file = await uploadFile(files.file[0])
-    //             } catch (error) {
-    //                 console.log(error)
-    //             }
-    //         }
-    //         if(file) 
-    //             response = { name: fields.lastname, filePath: file }
-    //         else
-    //             response = { name: fields.lastname }
-
-    //         resolve(response)
-    //     });
-    // }
 }
 
 // router.get("/:u_id", controller.getOne)

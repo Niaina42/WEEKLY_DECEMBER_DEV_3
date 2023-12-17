@@ -1,6 +1,6 @@
 # My Storage
 
-### Prod link: http://173.249.22.169:3030
+### Prod link: http://173.249.22.169:3005
 
 ## Installation
 
@@ -15,6 +15,7 @@
 ``` 
     const BaseUrl = 'http://localhost:9090' 
 ```
+- Add a folder named "public" in the "src/"
 - Go to the server directories and run 
 ``` 
     npm install 
@@ -27,6 +28,7 @@
 ### Deploy on server
 - change .env on server directories, remove "localhost" and change to the @IP your server
 - run ``` docker-compose up build ``` for starting the database
+- Add a folder named "public" in the "src/"
 - Go to the server directories and run 
 ``` 
     npm install 

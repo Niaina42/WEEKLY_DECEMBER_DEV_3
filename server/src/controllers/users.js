@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const model = require("../models/users");
+const folderModel = require("../models/folders")
 const { generateToken, sendRes } = require('../service/service')
 const saltRounds = 10;
  
@@ -109,6 +110,8 @@ module.exports = {
                     else {
                         let user = await model.create(name, last_name, email, hash)
                         if(user) {
+                            // Add default folder
+                            let defaultFolder = await folderModel.create("My Folder", user.id)
                             let token = generateToken(user.id, user.email)
                             let response  = {
                                 user,

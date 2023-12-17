@@ -11,6 +11,7 @@ const Login = () => {
   }
   const [data, setData] = useState(initial)
   const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
   const navigation = useNavigate()
   const { login } = useAuth()
   const handleChange = (e) => {
@@ -23,12 +24,15 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try { 
+      setLoading(true)
       let response = await login(data)
       if(response) {
+        setLoading(false)
         navigation("/home")
       }
     } catch (error) {
       console.log(error)
+      setLoading(false)
       setError(error.response.data.message)
     }
   }
@@ -69,7 +73,7 @@ const Login = () => {
                     <button
                       className="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn"
                     >
-                      CONNEXION
+                      {loading ? "Chargemenr...":"CONNEXION"}
                     </button>
                   </div>
                   {

@@ -5,12 +5,10 @@ import Sidebar from "./Sidebar/Sidebar";
 const Layout = ({ children }) => {
   return (
     <main>
-        <Header />
-        <Sidebar>
-            { children }
-        </Sidebar>
+      <Header />
+      <Sidebar>{children}</Sidebar>
     </main>
-  );
-}
+  )
+};
 
 export default Layout;

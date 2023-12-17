@@ -7,13 +7,17 @@ module.exports = {
         return result
     },
     getOne:  async (folder_id) => { 
-        let result = await prisma.folders.findMany(
+        let result = await prisma.folders.findUnique(
             {
                 where:  {
                     id: parseInt(folder_id)
                 },
                 include: {
-                    files: true
+                    files: {
+                        orderBy: {
+                            id: 'desc'
+                        }
+                    }
                 }
             }
         )

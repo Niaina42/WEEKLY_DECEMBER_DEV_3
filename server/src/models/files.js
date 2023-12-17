@@ -18,16 +18,24 @@ module.exports = {
         )
         return result
     },
-    create: async (path, folder_id) => {
+    create: async (path, name, folder_id) => {
         const result = await prisma.files.create({
             data: {
                 path, 
+                name,
                 folder: {
                     connect: {
                         id: parseInt(folder_id)
                     }
                 }
             },
+        })
+
+        return result
+    },
+    delete: async (id) => {
+        let result = await prisma.files.delete({
+            where: { id: parseInt(id) },
         })
 
         return result

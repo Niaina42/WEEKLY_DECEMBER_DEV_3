@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const SECRET = "mykeyYaa";
 const fs = require("fs");
 const path = require("path");
+const zlib = require('zlib');
 const formidable = require("formidable");
 
 module.exports = {
@@ -18,32 +19,47 @@ module.exports = {
     );
     return token;
   },
-
   uploadFile: function (file) {
     return new Promise((resolve, reject) => {
-      // The file will have a temporary path where the form data has stored it
       const tempPath = file.filepath;
-      const originalName = file.originalFilename.replace(" ", "_").split(".");
+      const originalName = file.originalFilename.replace(/ /g, "_").split(".");
       const newName =
-        originalName[0] + "_" + new Date().getTime() + "." + originalName[1];
-
+        originalName[0] + "_" + new Date().getTime() + "." + originalName[1] + '.gz'; 
+  
       const parentDirectory = path.join(__dirname, "../../");
       const targetPath = path.join(parentDirectory, "public", newName);
+  
+      const readStream = fs.createReadStream(tempPath);
 
-      // // Use fs.rename to move the file to the target directory
-      fs.rename(tempPath, targetPath, (err) => {
-        if (err) {
+      const gzipStream = zlib.createGzip();
+
+      const writeStream = fs.createWriteStream(targetPath);
+  
+      readStream
+        .pipe(gzipStream) 
+        .pipe(writeStream) 
+        .on('error', (err) => {
           reject(err);
-        }
-        resolve(`/public/${newName}`);
+        })
+        .on('finish', () => {
+          resolve(`/public/${newName}`);
+        });
+  
+      writeStream.on('finish', () => {
+        fs.unlink(tempPath, err => {
+          if (err) {
+            console.error("Error removing temporary file:", err);
+          }
+        });
       });
     });
   },
-
-  deleteFile: function (path) {
-    if (path) {
+  deleteFile: function (targPath) {
+    if (targPath) {
+      const parentDirectory = path.join(__dirname, "../../");
+      const targetPath = path.join(parentDirectory, targPath);
       try {
-        fs.unlink(path, (err) => {
+        fs.unlink(targetPath, (err) => {
           if (err) throw err;
           else {
             return true;

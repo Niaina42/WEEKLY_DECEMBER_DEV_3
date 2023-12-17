@@ -16,7 +16,7 @@ const folderRouter = {
         }
     },
     '/folders/one':  async (req, res) => {
-        if(req.method == "GET") {
+        if(req.method == "POST") {
             try {
                 const body = await getBody(req)
                 controller.getOne(body, res)
@@ -30,7 +30,7 @@ const folderRouter = {
         }
     },
     '/folders/user':  async (req, res) => {
-        if(req.method == "GET") {
+        if(req.method == "POST") {
             try {
                 const body = await getBody(req)
                 controller.getByUser(body, res)

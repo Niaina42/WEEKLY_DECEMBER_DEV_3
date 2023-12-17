@@ -14,6 +14,7 @@ const Register = () => {
   const [data, setData] = useState(initial)
   const { signup } = useAuth()
   const navigation = useNavigate()
+  const [loading, setLoading] = useState(false)
  
   const handleChange = (e) => {
     setData({
@@ -25,8 +26,10 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try { 
+      setLoading(true)
       let response = await signup(data)
       if(response) {
+        setLoading(false)
         navigation("/home")
       }
     } catch (error) {
@@ -105,7 +108,7 @@ const Register = () => {
                       class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn"
                       type="submit"
                     >
-                      S'INSCRIRE
+                      {loading ? "Chargement...":"S'INSCRIRE"}
                     </button>
                   </div>
                   <div class="text-center mt-4 font-weight-light">

@@ -30,6 +30,7 @@ model Files {
   id          Int           @id @default(autoincrement())
   createdAt   DateTime      @default(now())
   path        String        @db.VarChar(255)
+  name        String?       @db.VarChar(255)
   folder      Folders       @relation(fields: [folderId], references: [id])
   folderId    Int
 }

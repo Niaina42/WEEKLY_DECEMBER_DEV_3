@@ -16,7 +16,7 @@ const fileRouter = {
         }
     },
     '/files/folder':  async (req, res) => {
-        if(req.method == "GET") {
+        if(req.method == "POST") {
             try {
                 const body = await getBody(req)
                 controller.getByFolder(body, res)
@@ -34,6 +34,20 @@ const fileRouter = {
             try {
                 const body = await getBody(req)
                 controller.create(body, res)
+            } catch (error) {
+                console.log(error)
+                sendRes(res, 500, {message: "Internal server error"})
+            }
+        }
+        else {
+            sendRes(res, 400, {error: "Method not allowed"})
+        }
+    },
+    '/files/delete': async (req, res) => {
+        if(req.method == "POST") {
+            try {
+                const body = await getBody(req)
+                controller.delete(body, res)
             } catch (error) {
                 console.log(error)
                 sendRes(res, 500, {message: "Internal server error"})

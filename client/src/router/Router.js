@@ -5,6 +5,8 @@ import Login from "../components/Login/Login";
 import Register from "../components/Register/Register";
 import ProtectedRoute from "../services/pageGuard/ProtectedRoute";
 import RedirectRoute from "../services/pageGuard/RedirectRoute";
+import AddFile from "../components/AddFile/AddFile";
+import AddFolder from "../components/AddFolder/AddFolder";
 
 const Router = () => {
   return (
@@ -15,6 +17,30 @@ const Router = () => {
           element={
             <ProtectedRoute>
               <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/home/:folder_id"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/files/add/:folder_id"
+          element={
+            <ProtectedRoute>
+              <AddFile />
+            </ProtectedRoute>
+          }
+        />
+          <Route
+          path="/folder/add"
+          element={
+            <ProtectedRoute>
+              <AddFolder />
             </ProtectedRoute>
           }
         />

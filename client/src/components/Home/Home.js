@@ -83,7 +83,7 @@ const Home = () => {
                         )}
                         {!loading && folder && folder.files.length != 0 ? (
                           folder.files.map((file, idx) => <TableItem key={idx} file={file} deleteCallback={fetchFolder}/>)
-                        ) : (
+                        ) : !loading && (
                           <tr>
                             <td colSpan={4} className="text-center">
                               Vous n'avez pas encore de fichier
